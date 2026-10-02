@@ -237,7 +237,8 @@
                 var dict = caseInsensitive ? Localization.mDictionaryCaseInsensitive : Localization.mDictionary;
                 if (dict.TryGetValue(key, out string[] values))
                 {
-                    return values[(int)language] ?? string.Empty;
+                    int index = GetLanguageColumnIndex(language);
+                    return index >= 0 && index < values.Length ? values[index] ?? string.Empty : string.Empty;
                 }
 
                 return string.Empty;
@@ -246,6 +247,28 @@
             {
                 return string.Empty;
             }
+        }
+
+        /// <summary>
+        /// 照 KEY 列的欄名找語言欄位（V3.2 在 NoTranslate 後多了 KeepLoaded 欄，不能再拿列舉序號當索引，否則 Tchinese 會拿到 schinese）
+        /// </summary>
+        /// <param name="language"></param>
+        /// <returns></returns>
+        private static int GetLanguageColumnIndex(Language language)
+        {
+            if (Localization.mDictionary.TryGetValue("KEY", out string[] header))
+            {
+                string name = language.ToString();
+                for (int i = 0; i < header.Length; i++)
+                {
+                    if (string.Equals(header[i], name, StringComparison.OrdinalIgnoreCase))
+                    {
+                        return i;
+                    }
+                }
+            }
+
+            return (int)language;
         }
 
         /// <summary>
