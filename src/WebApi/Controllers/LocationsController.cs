@@ -1,6 +1,4 @@
-﻿using Webserver.WebAPI.APIs.WorldState;
-
-namespace SdtdServerKit.WebApi.Controllers
+﻿namespace SdtdServerKit.WebApi.Controllers
 {
     /// <summary>
     /// Locations
