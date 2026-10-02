@@ -60,8 +60,9 @@ namespace SdtdServerKit.Functions
                     var landClaimPadding = new Vector3i(landClaimRadius, 0, landClaimRadius);
                     var bedrollPadding = new Vector3i(bedrollRadius, 0, bedrollRadius);
 
-                    var pois = decorator.GetPOIPrefabs();
-                    if (pois == null)
+                    var pois = new List<PrefabInstance>();
+                    decorator.GetPOIPrefabs(pois);
+                    if (pois.Count == 0)
                     {
                         CustomLogger.Warn("系统房防护：POI 列表为空，跳过初始化");
                         return;

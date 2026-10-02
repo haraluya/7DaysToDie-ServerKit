@@ -64,7 +64,7 @@
                         {
                             entity.PlayOneShot("keystone_destroyed", false, false, false);
                         }
-                        GameManager.Instance.SavePersistentPlayerData();
+                        GameManager.Instance.persistentPlayers.SavePersistentPlayerData();
                     }
                 }
                 else if (args.Count == 3)
@@ -88,7 +88,7 @@
                             entity.PlayOneShot("keystone_destroyed", false, false, false);
                         }
 
-                        GameManager.Instance.SavePersistentPlayerData();
+                        GameManager.Instance.persistentPlayers.SavePersistentPlayerData();
                     }
                 }
                 else

@@ -82,14 +82,19 @@ namespace SdtdServerKit.HarmonyPatchers
             for (int i = 0; i < landClaims.Count; i++)
             {
                 var change = landClaims[i];
+                if (!change.TryGetBlockPos(out var pos))
+                {
+                    continue;
+                }
+
                 try
                 {
-                    RemoveMapMarkerByPosition(clientInfo, change.pos, "land_claim", EnumMapObjectType.LandClaim);
-                    GiveItemToPlayer(clientInfo, player, change.pos, change.blockValue);
+                    RemoveMapMarkerByPosition(clientInfo, pos, "land_claim", EnumMapObjectType.LandClaim);
+                    GiveItemToPlayer(clientInfo, player, pos, change.blockValue);
                 }
                 catch (Exception ex)
                 {
-                    CustomLogger.Error(ex, $"禁放返还：返还领地石失败 - 位置 {change.pos}");
+                    CustomLogger.Error(ex, $"禁放返还：返还领地石失败 - 位置 {pos}");
                 }
             }
         }
@@ -105,14 +110,19 @@ namespace SdtdServerKit.HarmonyPatchers
             for (int i = 0; i < beds.Count; i++)
             {
                 var change = beds[i];
+                if (!change.TryGetBlockPos(out var pos))
+                {
+                    continue;
+                }
+
                 try
                 {
-                    RemoveMapMarkerByOwner(clientInfo, player, change.pos, "sleeping_bag", EnumMapObjectType.SleepingBag);
-                    GiveItemToPlayer(clientInfo, player, change.pos, change.blockValue);
+                    RemoveMapMarkerByOwner(clientInfo, player, pos, "sleeping_bag", EnumMapObjectType.SleepingBag);
+                    GiveItemToPlayer(clientInfo, player, pos, change.blockValue);
                 }
                 catch (Exception ex)
                 {
-                    CustomLogger.Error(ex, $"禁放返还：返还睡袋失败 - 位置 {change.pos}");
+                    CustomLogger.Error(ex, $"禁放返还：返还睡袋失败 - 位置 {pos}");
                 }
             }
 
@@ -196,7 +206,7 @@ namespace SdtdServerKit.HarmonyPatchers
             int entityId = CreateItemEntity(dropPos, itemStack, clientInfo.entityId);
             if (entityId != -1)
             {
-                GameManager.Instance.CollectEntityServer(entityId, clientInfo.entityId);
+                CollectEntityServer(entityId, clientInfo.entityId);
             }
         }
 
@@ -214,6 +224,23 @@ namespace SdtdServerKit.HarmonyPatchers
             }
 
             return block.GetBlockName();
+        }
+
+        /// <summary>
+        /// V3.2 移除了 GameManager.CollectEntityServer；照遊戲 NetPackageEntityCollect 在伺服器端的流程：
+        /// 先通知該玩家撿起，再由伺服器移除實體（不能呼叫 Entity.Collect，它會在專用伺服器上跑 OnCollectLocal）。
+        /// </summary>
+        private static void CollectEntityServer(int entityId, int playerId)
+        {
+            var entity = GameManager.Instance.World.GetEntity(entityId);
+            if (entity == null)
+            {
+                return;
+            }
+
+            SingletonMonoBehaviour<ConnectionManager>.Instance.SendPackage(
+                NetPackageManager.GetPackage<NetPackageEntityCollect>().Setup(entityId, playerId), false, playerId);
+            entity.OnCollectServer(playerId);
         }
 
         private static int CreateItemEntity(Vector3 dropPos, ItemStack itemStack, int belongsPlayerId)

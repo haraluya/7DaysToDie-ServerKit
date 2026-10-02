@@ -78,7 +78,7 @@ namespace SdtdServerKit.Commands
 
                         if (playerDataFile.bLoaded)
                         {
-                            bool removedFromBag = RemoveItemValue(playerDataFile.bag, itemName);
+                            bool removedFromBag = RemoveItemValue(playerDataFile.bag?.GetSlots() ?? Array.Empty<ItemStack>(), itemName);
                             bool removedFromInventory = RemoveItemValue(playerDataFile.inventory, itemName);
 
                             if (removedFromBag || removedFromInventory)

@@ -195,7 +195,7 @@
                 this.CreatedAt = DateTime.Now;
 
                 // Clear sleeper volumes
-                prefab.SleeperVolumes.Clear();
+                prefab.SleeperVolumeList.List.Clear();
             }
 
             public Prefab Prefab { get; set; }

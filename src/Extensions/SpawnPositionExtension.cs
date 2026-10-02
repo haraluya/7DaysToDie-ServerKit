@@ -14,7 +14,7 @@
         {
             return new Models.SpawnPosition()
             {
-                ClrIdx = spawnPosition.ClrIdx,
+                ClrIdx = 0,
                 Position = spawnPosition.position.ToPosition(),
                 Heading = spawnPosition.heading,
             };

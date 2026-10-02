@@ -134,7 +134,7 @@ namespace SdtdServerKit.Commands
                 };
                 oldPrefab.copyFromWorld(GameManager.Instance.World, offsetPosition, offsetPosition + prefabSize);
 
-                prefab.SleeperVolumes.Clear();
+                prefab.SleeperVolumeList.List.Clear();
                 prefab.CopyIntoLocal(GameManager.Instance.World.ChunkCache, offsetPosition, true, true, FastTags<TagGroup.Global>.none);
 
                 ChunkHelper.ForceReload(chunks);

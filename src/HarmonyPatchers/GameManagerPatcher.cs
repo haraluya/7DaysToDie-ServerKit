@@ -91,7 +91,7 @@ namespace SdtdServerKit.HarmonyPatchers
                         continue;
                     }
 
-                    bool isLandClaim = block is BlockLandClaim;
+                    bool isLandClaim = block.IsLandClaim();
                     bool isBedroll = block is BlockSleepingBag;
 
                     if (!isLandClaim && !isBedroll)
@@ -99,8 +99,13 @@ namespace SdtdServerKit.HarmonyPatchers
                         continue;
                     }
 
-                    var existingBlock = world.GetBlock(info.pos).Block;
-                    if (isLandClaim && existingBlock is BlockLandClaim)
+                    if (!info.TryGetBlockPos(out var pos))
+                    {
+                        continue;
+                    }
+
+                    var existingBlock = world.GetBlock(pos).Block;
+                    if (isLandClaim && existingBlock.IsLandClaim())
                     {
                         continue;
                     }
@@ -110,13 +115,13 @@ namespace SdtdServerKit.HarmonyPatchers
                     }
 
                     bool hitChunkResetLand = isLandClaim && banLandClaim
-                        && chunkReset.IsInResetArea(info.pos.x, info.pos.z);
+                        && chunkReset.IsInResetArea(pos.x, pos.z);
                     bool hitChunkResetBed = isBedroll && banBedroll
-                        && chunkReset.IsInResetArea(info.pos.x, info.pos.z);
+                        && chunkReset.IsInResetArea(pos.x, pos.z);
                     bool hitPoiLand = isLandClaim && banPoiLandClaim
-                        && Functions.PoiProtectionZone.IsInLandClaimZone(info.pos);
+                        && Functions.PoiProtectionZone.IsInLandClaimZone(pos);
                     bool hitPoiBed = isBedroll && banPoiBedroll
-                        && Functions.PoiProtectionZone.IsInBedZone(info.pos);
+                        && Functions.PoiProtectionZone.IsInBedZone(pos);
 
                     if (!hitChunkResetLand && !hitChunkResetBed && !hitPoiLand && !hitPoiBed)
                     {
@@ -124,7 +129,7 @@ namespace SdtdServerKit.HarmonyPatchers
                     }
 
                     returned ??= new List<BlockChangeInfo>();
-                    returned.Add(new BlockChangeInfo(info.clrIdx, info.pos, world.GetBlock(info.pos)));
+                    returned.Add(new BlockChangeInfo(info.blockValueRef, world.GetBlock(pos)));
 
                     if (isLandClaim)
                     {
@@ -162,7 +167,7 @@ namespace SdtdServerKit.HarmonyPatchers
                     else if (hitPoiLand) reason = "系统房领地石";
                     else reason = "系统房睡袋";
 
-                    CustomLogger.Debug($"区域禁放：玩家 {clientInfo.entityId} 在 ({info.pos.x},{info.pos.z}) 放置 {reason} 已被拦截");
+                    CustomLogger.Debug($"区域禁放：玩家 {clientInfo.entityId} 在 ({pos.x},{pos.z}) 放置 {reason} 已被拦截");
                 }
 
                 if (returned != null && returned.Count > 0)
@@ -325,7 +330,7 @@ namespace SdtdServerKit.HarmonyPatchers
                     return;
                 }
 
-                __instance.World.ChunkClusters[0].ChunkProvider.SetSpawnPointList(customSpawnPoints);
+                __instance.World.ChunkCache.ChunkProvider.SetSpawnPointList(customSpawnPoints);
                 
                 _cInfo.SendPackage(NetPackageManager.GetPackage<NetPackageWorldSpawnPoints>().Setup(__instance.GetSpawnPointList()));
 

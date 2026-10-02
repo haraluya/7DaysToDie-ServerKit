@@ -367,23 +367,23 @@ namespace SdtdServerKit.TraderProtectAreas
         }
 
         /// <summary>
-        /// 重新计算 ProtectSizeXMax
+        /// 重新计算商人区域的搜寻范围（V3.2：原 ProtectSizeXMax 改为 traderStore.maxSizeX，只在 AddTrader 时更新）
         /// </summary>
         private static void RecomputeProtectSizeXMaxUnsafe(DynamicPrefabDecorator decorator)
         {
-            int max = 0;
+            int max = int.MinValue;
             var areas = decorator.GetTraderAreas();
             if (areas != null)
             {
                 for (int i = 0; i < areas.Count; i++)
                 {
-                    if (areas[i].ProtectSize.x > max)
+                    if (areas[i].AreaBounds.size.x > max)
                     {
-                        max = areas[i].ProtectSize.x;
+                        max = areas[i].AreaBounds.size.x;
                     }
                 }
             }
-            decorator.ProtectSizeXMax = max;
+            decorator.traderStore.maxSizeX = max;
         }
 
         /// <summary>
@@ -398,7 +398,7 @@ namespace SdtdServerKit.TraderProtectAreas
 
             var position = new Vector3i(minX, 0, minZ);
             var size = new Vector3i(maxX - minX, 255, maxZ - minZ);
-            var teleportVolumes = new List<Prefab.PrefabTeleportVolume>();
+            var teleportVolumes = new PrefabVolumes.PrefabTeleportVolumeList(null);
             return new TraderArea(position, size, Vector3i.zero, teleportVolumes);
         }
 

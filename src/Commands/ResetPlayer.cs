@@ -108,7 +108,7 @@ namespace SdtdServerKit.Commands
             if (list.Players.ContainsKey(uId))
             {
                 list.Players.Remove(uId);
-                GameManager.Instance.SavePersistentPlayerData();
+                GameManager.Instance.persistentPlayers.SavePersistentPlayerData();
             }
         }
 

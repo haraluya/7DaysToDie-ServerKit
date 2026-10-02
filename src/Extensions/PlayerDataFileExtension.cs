@@ -17,7 +17,7 @@ namespace SdtdServerKit.Extensions
         public static int GetInventoryStackCount(this PlayerDataFile pdf, string itemName, Language language)
         {
             int count = 0;
-            var bag = ProcessInv(pdf.bag, pdf.id, language);
+            var bag = ProcessInv(pdf.bag?.GetSlots() ?? Array.Empty<ItemStack>(), pdf.id, language);
             var belt = ProcessInv(pdf.inventory, pdf.id, language);
 
             foreach (var item in bag)
@@ -53,7 +53,7 @@ namespace SdtdServerKit.Extensions
             {
                 return new Models.Inventory()
                 {
-                    Bag = ProcessInv(pdf.bag, pdf.id, language),
+                    Bag = ProcessInv(pdf.bag?.GetSlots() ?? Array.Empty<ItemStack>(), pdf.id, language),
                     Belt = ProcessInv(pdf.inventory, pdf.id, language),
                     Equipment = ProcessEqu(pdf.equipment, pdf.id, language)
                 };

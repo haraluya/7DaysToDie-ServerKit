@@ -148,8 +148,7 @@ namespace SdtdServerKit.Utilities
             {
                 bPrefabCopiedIntoWorld = true
             };
-            dynamicPrefabDecorator.GetDynamicPrefabs().Add(prefabInstance);
-            dynamicPrefabDecorator.GetPOIPrefabs().Add(prefabInstance);
+            dynamicPrefabDecorator.AddWorldPrefab(prefabInstance, true);
             dynamicPrefabDecorator.Save(PathAbstractions.WorldsSearchPaths.GetLocation(GameManager.Instance.World.ChunkCache.Name, null, null).FullPath);
             return prefabInstanceId;
         }
@@ -162,14 +161,13 @@ namespace SdtdServerKit.Utilities
         public static bool RemovePrefabFromRWG(int prefabInstanceId)
         {
             var dynamicPrefabDecorator = GameManager.Instance.GetDynamicPrefabDecorator();
-            var dynamicPrefabs = dynamicPrefabDecorator.GetDynamicPrefabs();
-            var POIPrefabs = dynamicPrefabDecorator.GetPOIPrefabs();
-            foreach (var prefabInstance in dynamicPrefabs)
+            var worldPrefabs = new List<PrefabInstance>();
+            dynamicPrefabDecorator.GetWorldPrefabs(worldPrefabs);
+            foreach (var prefabInstance in worldPrefabs)
             {
                 if (prefabInstance != null && prefabInstance.id == prefabInstanceId)
                 {
-                    dynamicPrefabs.Remove(prefabInstance);
-                    POIPrefabs.Remove(prefabInstance);
+                    dynamicPrefabDecorator.RemoveWorldPrefab(prefabInstance);
                     dynamicPrefabDecorator.Save(PathAbstractions.WorldsSearchPaths.GetLocation(GameManager.Instance.World.ChunkCache.Name, null, null).FullPath);
                     return true;
                 }

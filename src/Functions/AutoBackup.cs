@@ -358,7 +358,7 @@ namespace SdtdServerKit.Functions
         {
             try
             {
-                var chunkProvider = GameManager.Instance?.World?.ChunkClusters?[0]?.ChunkProvider
+                var chunkProvider = GameManager.Instance?.World?.ChunkCache?.ChunkProvider
                     as ChunkProviderGenerateWorld;
 
                 if (chunkProvider?.m_RegionFileManager == null)

@@ -332,7 +332,8 @@ namespace SdtdServerKit.WebApi.Controllers
                     return Ok(Array.Empty<object>());
                 }
 
-                var prefabs = decorator.GetDynamicPrefabs();
+                var prefabs = new List<PrefabInstance>();
+                decorator.GetAllPrefabs(prefabs);
                 var result = new List<PrefabInfo>(prefabs.Count);
 
                 foreach (var pi in prefabs)
