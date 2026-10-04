@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# Game assemblies belong to The Fun Pimps - copy them with scripts/sync-7dtd-binaries.sh
+/src/7dtd-binaries/*.dll
