@@ -1,5 +1,7 @@
 English | [简体中文](./README.zh.md)
 
+> **Unofficial V3.2 compatibility build (branch `v3.2-compat`).** Runs the Pro3.2 source on 7 Days to Die **V3.2.0** — see [V3.2 support](./docs/V3.2-SUPPORT.md) · [繁體中文說明](./docs/V3.2-SUPPORT.zh-TW.md).
+
 <div align="center"><img width="200" src="https://github.com/user-attachments/assets/d002c198-7bb3-4a46-896f-f85ad8090500"/>
   <h1> 7DaysToDie-ServerKit </h1>
   <p>A open source mod for 7 Days to Die dedicated servers. Provides RESTful APIs and a powerful web management panel to help owners and administrators operate their dedicated server. Works with both Linux and Windows (Ubuntu 22.04 and Windows Server 2016+ test passed). Supports multiple languages: English, Deutsch, Español, Français, Italiano, 日本語, 한국어, Polski, Português (Brasil), Русский, Türkçe, 简体中文, 繁體中文
